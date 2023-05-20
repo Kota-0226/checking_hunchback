@@ -43,7 +43,7 @@ os.makedirs("data/temp", exist_ok=True)
 base_path = os.path.join("data/temp", "camera_capture")
 
 
-sg.theme("LightBlue")
+sg.theme("LightBlue2")
 
 layout = [
     [
@@ -56,33 +56,38 @@ layout = [
         )
     ],
     [
-        sg.Text("Camera number: ", size=(8, 1)),
-        sg.InputText(default_text="0", size=(4, 1), key="-camera_num-"),
-    ],
-    [sg.Image(filename="", key="image")],
-    [
+        sg.Output(size=(100, 8)),
         sg.Button("Start", size=(10, 1), font="Helvetica 14", key="-start-"),
         sg.Button("Stop", size=(10, 1), font="Helvetica 14", key="-stop-"),
-        sg.Button("Exit", size=(10, 1), font="Helvetica 14", key="-exit-"),
     ],
+    # [
+    #    sg.Text("Camera number: ", size=(8, 1)),
+    #   sg.InputText(default_text="0", size=(4, 1), key="-camera_num-"),
+    # ],
+    [sg.Image(filename="", key="image", size=(100, 8))],
+    # [
+    ##   sg.Button("Stop", size=(10, 1), font="Helvetica 14", key="-stop-"),
+    # ]
+    # sg.Button("Exit", size=(10, 1), font="Helvetica 14", key="-exit-"),
+    # ],
 ]
 
 
-window = sg.Window("Realtime movie", layout, location=(100, 100), size=(800, 800))
+window = sg.Window("Realtime movie", layout, location=(10, 10), size=(1000, 800))
 
 
 recording = False
 
 while True:
     event, values = window.read(timeout=20)
-    if event in (None, "-exit-"):
-        break
+    # if event in (None, "-exit-"):
+    # break
 
-    elif event == "-start-":
+    if event == "-start-":
         window["-status-"].update("Live")
-        camera_number = int(values["-camera_num-"])
+        # camera_number = int(values["-camera_num-"])
         # cap = cv2.VideoCapture(camera_number, cv2.CAP_DSHOW)
-        cap = cv2.VideoCapture(camera_number)
+        cap = cv2.VideoCapture(0)
         recording = True
 
     elif event == "-stop-":
@@ -143,7 +148,7 @@ while True:
                     )
 
                 else:
-                    if distance < first_distance * 0.95:
+                    if distance < first_distance * 0.9:
                         print("Your back is hancing!")
                         hunch_sequence += 1
                         cv2.imwrite(
@@ -157,12 +162,12 @@ while True:
                         if hunch_sequence > 2:
                             cv2.putText(
                                 frame,
-                                text="hunch back for long time!!",
+                                text="Caution!!",
                                 org=(250, 300),
                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                                fontScale=3.0,
-                                color=(0, 0, 255),
-                                thickness=10,
+                                fontScale=4.0,
+                                color=(255, 255, 0),
+                                thickness=12,
                                 lineType=cv2.LINE_4,
                             )
                         else:
