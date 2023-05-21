@@ -2,7 +2,8 @@ import cv2
 import numpy as np
 
 import PySimpleGUI as sg
-import slackweb
+
+# import slackweb
 
 import argparse
 import os
@@ -20,11 +21,12 @@ parser.add_argument("--model", type=str, default="mobilenet_thin")
 args = parser.parse_args()
 w, h = model_wh(args.resize)
 
+"""
 slack = slackweb.Slack(
     url="https://hooks.slack.com/services/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"
 )
 slack.notify(text="背中曲がってるよー！")
-# notify_text = "背中曲がってるよー！"
+"""
 
 
 def findPoint(humans, p):
@@ -106,8 +108,7 @@ while True:
         # print(H,W)
         img = np.full((H, W), 0)
         # ndarry to bytes
-        imgbytes = cv2.imencode(".jpg", img)[1].tobytes()
-        # imgbytes = cv2.imencode(".png", img)[1].tobytes()
+        imgbytes = cv2.imencode(".png", img)[1].tobytes()
         window["image"].update(data=imgbytes)
         cap.release()
         cv2.destroyAllWindows()
@@ -115,6 +116,10 @@ while True:
     if recording:
         ret, frame = cap.read()
         if ret is True:
+            # imgbytes = cv2.imencode(".png", frame)[1].tobytes()
+            # window["image"].update(data=imgbytes)
+            # height, width = frame.shape[0], frame.shape[1]
+
             if h > 0 and w > 0:
                 e = TfPoseEstimator(get_graph_path(args.model), target_size=(w, h))
             else:
@@ -174,7 +179,7 @@ while True:
                                 thickness=12,
                                 lineType=cv2.LINE_4,
                             )
-                            slack.notify(text=notify.txt)
+                            # slack.notify(text=notify.txt)
                         else:
                             cv2.putText(
                                 frame,
